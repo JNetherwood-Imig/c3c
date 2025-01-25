@@ -9,7 +9,7 @@ static Type *flatten_raw_function_type(Type *type);
 static struct
 {
 	Type u0, u1, i8, i16, i32, i64, i128;
-	Type u8, u16, u32, u64, u128;
+	Type c8, u8, u16, u32, u64, u128;
 	Type bf16, f16, f32, f64, f128;
 	Type usz, isz, uptr, iptr;
 	Type string;
@@ -35,7 +35,8 @@ Type *type_long = &t.i64;
 Type *type_i128 = &t.i128;
 Type *type_iptr = &t.iptr;
 Type *type_isz = &t.isz;
-Type *type_char = &t.u8;
+Type *type_char = &t.c8;
+Type *type_uchar = &t.u8;
 Type *type_ushort = &t.u16;
 Type *type_uint = &t.u32;
 Type *type_ulong = &t.u64;
@@ -89,7 +90,7 @@ Type *type_int_unsigned_by_bitsize(BitSize bit_size)
 {
 	switch (bit_size)
 	{
-		case 8: return type_char;
+		case 8: return type_uchar;
 		case 16: return type_ushort;
 		case 32: return type_uint;
 		case 64: return type_ulong;
@@ -1355,25 +1356,25 @@ void type_setup(PlatformTarget *target)
 {
 	max_alignment_vector = (AlignSize)target->align_max_vector;
 
-	type_create_float("float16", &t.f16, TYPE_F16, BITS16);
-	type_create_float("bfloat", &t.bf16, TYPE_BF16, BITS16);
-	type_create_float("float", &t.f32, TYPE_F32, BITS32);
-	type_create_float("double", &t.f64, TYPE_F64, BITS64);
-	type_create_float("float128", &t.f128, TYPE_F128, BITS128);
-
+	type_create_float("f16", &t.f16, TYPE_F16, BITS16);
+	type_create_float("bf16", &t.bf16, TYPE_BF16, BITS16);
+	type_create_float("f32", &t.f32, TYPE_F32, BITS32);
+	type_create_float("f64", &t.f64, TYPE_F64, BITS64);
+	type_create_float("f128", &t.f128, TYPE_F128, BITS128);
 
 	type_init_int("ichar", &t.i8, TYPE_I8, BITS8);
-	type_init_int("short", &t.i16, TYPE_I16, BITS16);
-	type_init_int("int", &t.i32, TYPE_I32, BITS32);
-	type_init_int("long", &t.i64, TYPE_I64, BITS64);
-	type_init_int("int128", &t.i128, TYPE_I128, BITS128);
+	type_init_int("i8", &t.i8, TYPE_I8, BITS8);
+	type_init_int("i16", &t.i16, TYPE_I16, BITS16);
+	type_init_int("i32", &t.i32, TYPE_I32, BITS32);
+	type_init_int("i64", &t.i64, TYPE_I64, BITS64);
+	type_init_int("i128", &t.i128, TYPE_I128, BITS128);
 
 	type_init_int("bool", &t.u1, TYPE_BOOL, BITS8);
-	type_init_int("char", &t.u8, TYPE_U8, BITS8);
-	type_init_int("ushort", &t.u16, TYPE_U16, BITS16);
-	type_init_int("uint", &t.u32, TYPE_U32, BITS32);
-	type_init_int("ulong", &t.u64, TYPE_U64, BITS64);
-	type_init_int("uint128", &t.u128, TYPE_U128, BITS128);
+	type_init_int("u8", &t.u8, TYPE_U8, BITS8);
+	type_init_int("u16", &t.u16, TYPE_U16, BITS16);
+	type_init_int("u32", &t.u32, TYPE_U32, BITS32);
+	type_init_int("u64", &t.u64, TYPE_U64, BITS64);
+	type_init_int("u128", &t.u128, TYPE_U128, BITS128);
 
 	type_init_int("void", &t.u0, TYPE_VOID, BITS8);
 
@@ -1388,8 +1389,9 @@ void type_setup(PlatformTarget *target)
 	t.voidstar.pointer = type_void;
 	type_create("any", &t.any, TYPE_ANY, target->width_pointer * 2, target->align_pointer.align, target->align_pointer.pref_align);
 
-	type_create_alias("usz", &t.usz, type_int_unsigned_by_bitsize(target->width_pointer));
-	type_create_alias("isz", &t.isz, type_int_signed_by_bitsize(target->width_pointer));
+	type_create_alias("char", &t.c8, type_uchar);
+	type_create_alias("usize", &t.usz, type_int_unsigned_by_bitsize(target->width_pointer));
+	type_create_alias("isize", &t.isz, type_int_signed_by_bitsize(target->width_pointer));
 	type_create_alias("uptr", &t.uptr, type_int_unsigned_by_bitsize(target->width_pointer));
 	type_create_alias("iptr", &t.iptr, type_int_signed_by_bitsize(target->width_pointer));
 
@@ -1573,6 +1575,8 @@ Type *type_from_token(TokenType type)
 			return type_uptr;
 		case TOKEN_USHORT:
 			return type_ushort;
+		case TOKEN_UCHAR:
+			return type_uchar;
 		case TOKEN_USZ:
 			return type_usz;
 		case TOKEN_TYPEID:

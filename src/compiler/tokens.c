@@ -286,39 +286,41 @@ const char *token_type_to_string(TokenType type)
 		case TOKEN_BOOL:
 			return "bool";
 		case TOKEN_FLOAT128:
-			return "float128";
+			return "f128";
 		case TOKEN_DOUBLE:
-			return "double";
+			return "f64";
 		case TOKEN_FLOAT:
-			return "float";
+			return "f32";
 		case TOKEN_BFLOAT:
-			return "bfloat";
+			return "bf16";
 		case TOKEN_FLOAT16:
-			return "float16";
+			return "f16";
 		case TOKEN_LONG:
-			return "long";
+			return "i64";
 		case TOKEN_ULONG:
-			return "ulong";
+			return "u64";
 		case TOKEN_INT128:
-			return "int128";
+			return "i128";
 		case TOKEN_UINT128:
-			return "uint128";
+			return "u128";
 		case TOKEN_INT:
-			return "int";
+			return "i32";
 		case TOKEN_UINT:
-			return "uint";
+			return "u32";
 		case TOKEN_SHORT:
-			return "short";
+			return "i16";
 		case TOKEN_USHORT:
-			return "ushort";
+			return "u16";
 		case TOKEN_ICHAR:
-			return "ichar";
+			return "i8";
+		case TOKEN_UCHAR:
+			return "u8";
 		case TOKEN_CHAR:
 			return "char";
 		case TOKEN_ISZ:
-			return "isz";
+			return "isize";
 		case TOKEN_USZ:
-			return "usz";
+			return "usize";
 		case TOKEN_IPTR:
 			return "iptr";
 		case TOKEN_UPTR:

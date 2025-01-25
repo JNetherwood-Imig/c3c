@@ -217,7 +217,3 @@ bool parse_stdin(void)
 	return !compiler.context.errors_found;
 }
 
-
-
-
-
